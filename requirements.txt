@@ -1,0 +1,5 @@
+Flask>=0.12.3
+gunicorn==19.6.0
+requests
+pymongo
+Unidecode==1.0.22
