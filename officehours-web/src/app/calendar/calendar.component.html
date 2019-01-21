@@ -1,3 +1,10 @@
 <p>
-  calendar works!
+  <a href="https://mattlewis92.github.io/angular-calendar/#/kitchen-sink">Click here for the calendar documentation</a>
 </p>
+<mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent('Clicked', $event.event)"
+    (eventTimesChanged)="eventTimesChanged($event)">
+  </mwl-calendar-week-view>
