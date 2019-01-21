@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/",
+    "public": "dist/officehours-web/",
     "ignore": [
       "firebase.json",
       "**/.*",
