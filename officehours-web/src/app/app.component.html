@@ -1,0 +1,13 @@
+<mat-toolbar class="topbar" color="primary">
+  <mat-toolbar-row class="shadow">
+    <span>Office Hours</span>
+    <span class="topbar-spacer"></span>
+    <button mat-button [matMenuTriggerFor]="menu">Options<mat-icon>more_vert</mat-icon></button>
+    <mat-menu #menu="matMenu" class="menu">
+      <button mat-menu-item (click)="sayHey()">Say hey</button>
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="root">
+  <router-outlet></router-outlet>
+</div>
