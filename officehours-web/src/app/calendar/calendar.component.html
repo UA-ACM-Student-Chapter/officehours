@@ -1,16 +1,36 @@
-<mat-slide-toggle 
-  [(ngModel)]="ShowCalendar"
-  [color]="'primary'"></mat-slide-toggle>
-Toggle calendar
-<p>
-  <a href="https://mattlewis92.github.io/angular-calendar/#/kitchen-sink">Click here for the calendar documentation</a>
-</p>
-<h4>
-  Testing request to https://us-central1-officehours-5a2e7.cloudfunctions.net/helloWorld
-</h4>
-<p>
-  {{helloWorldResponse}}
-</p>
+<div>
+  <div>
+    <h1>{{ClassName}}</h1>
+    <h2>{{ProfessorName}}</h2>
+  </div>
+  <div>
+    <p>Reserve a time:</p>
+    <mat-form-field>
+      <input 
+        matInput [matDatepicker]="picker" 
+        placeholder="Choose a date"
+        [(ngModel)]="SelectedDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>    
+  </div>
+  <div *ngIf="SelectedDate">
+    <mat-form-field>
+        <mat-select placeholder="Select timeslot" [(ngModel)]="SelectedTimeSlot" name="slot">
+            <mat-option *ngFor="let slot of AvailableTimeSlots" [value]="slot">
+              {{slot}}
+            </mat-option>
+          </mat-select>  
+    </mat-form-field>
+  </div>
+  <button mat-button class="reserve-button" *ngIf="SelectedTimeSlot" style="margin-bottom:20px;">Reserve</button>
+  <div>
+    <mat-slide-toggle 
+    [(ngModel)]="ShowCalendar"
+    [color]="'primary'"></mat-slide-toggle>
+    Show/hide calendar
+  </div>
+</div>
 <mwl-calendar-week-view
     [viewDate]="viewDate"
     [events]="events"

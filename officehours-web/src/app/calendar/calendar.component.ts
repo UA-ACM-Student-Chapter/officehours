@@ -41,14 +41,19 @@ const colors: any = {
 })
 export class CalendarComponent implements OnInit {
 
-  ShowCalendar: boolean = true;
+  ShowCalendar: boolean = false;
+  SelectedDate: Date;
+  ClassName: string = "CS403: Programming Languages";
+  ProfessorName: string = "Dr. John Lusth";
+  AvailableTimeSlots: string[] = [
+    '12:00 pm',
+    '12:30 pm', 
+    '1:00 pm'
+  ]
+  SelectedTimeSlot: string;
 
   ngOnInit() {
-    this.http.get('https://us-central1-officehours-5a2e7.cloudfunctions.net/helloWorld')
-      .subscribe((data: string) => this.helloWorldResponse = data['message']);
   }
-
-  helloWorldResponse: String = "No response yet";
 
   modalContent: TemplateRef<any>;
 
