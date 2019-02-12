@@ -1,3 +1,7 @@
+<mat-slide-toggle 
+  [(ngModel)]="ShowCalendar"
+  [color]="'primary'"></mat-slide-toggle>
+Toggle calendar
 <p>
   <a href="https://mattlewis92.github.io/angular-calendar/#/kitchen-sink">Click here for the calendar documentation</a>
 </p>
@@ -12,5 +16,6 @@
     [events]="events"
     [refresh]="refresh"
     (eventClicked)="handleEvent('Clicked', $event.event)"
-    (eventTimesChanged)="eventTimesChanged($event)">
+    (eventTimesChanged)="eventTimesChanged($event)"
+    *ngIf="ShowCalendar">
   </mwl-calendar-week-view>

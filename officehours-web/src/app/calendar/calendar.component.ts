@@ -41,6 +41,8 @@ const colors: any = {
 })
 export class CalendarComponent implements OnInit {
 
+  ShowCalendar: boolean = true;
+
   ngOnInit() {
     this.http.get('https://us-central1-officehours-5a2e7.cloudfunctions.net/helloWorld')
       .subscribe((data: string) => this.helloWorldResponse = data['message']);
