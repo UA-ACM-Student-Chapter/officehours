@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http'
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import {
   startOfDay,
   endOfDay,
@@ -40,6 +40,8 @@ const colors: any = {
   styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
+
+  constructor(private modal: NgbModal, private http: HttpClient) {}
 
   ShowCalendar: boolean = false;
   SelectedDate: Date;
@@ -128,8 +130,6 @@ export class CalendarComponent implements OnInit {
   ];
 
   activeDayIsOpen: boolean = true;
-
-  constructor(private modal: NgbModal, private http: HttpClient) {}
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
