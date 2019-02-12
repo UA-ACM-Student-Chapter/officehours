@@ -43,12 +43,19 @@ export class CalendarComponent implements OnInit {
 
   constructor(private modal: NgbModal, private http: HttpClient) {}
 
-  ngOnInit() {
-    this.http.get('https://us-central1-officehours-5a2e7.cloudfunctions.net/helloWorld')
-      .subscribe((data: string) => this.helloWorldResponse = data['message']);
-  }
+  ShowCalendar: boolean = false;
+  SelectedDate: Date;
+  ClassName: string = "CS403: Programming Languages";
+  ProfessorName: string = "Dr. John Lusth";
+  AvailableTimeSlots: string[] = [
+    '12:00 pm',
+    '12:30 pm', 
+    '1:00 pm'
+  ]
+  SelectedTimeSlot: string;
 
-  helloWorldResponse: String = "No response yet";
+  ngOnInit() {
+  }
 
   modalContent: TemplateRef<any>;
 
