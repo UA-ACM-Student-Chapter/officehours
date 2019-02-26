@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, ElementRef, AfterViewChecked, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ElementRef, AfterViewChecked } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours} from 'date-fns';
 import { Subject } from 'rxjs';
