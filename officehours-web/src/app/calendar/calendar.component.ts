@@ -37,7 +37,7 @@ const colors: any = {
 })
 
 
-export class CalendarComponent implements OnInit, AfterContentChecked {
+export class CalendarComponent implements OnInit, AfterViewChecked {
 
   constructor(private modal: NgbModal, private http: HttpClient) {
     this.filteredClasses = this.classCtrl.valueChanges
