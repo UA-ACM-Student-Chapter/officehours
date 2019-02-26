@@ -1,10 +1,16 @@
-<mat-toolbar class="topbar" color="primary">
+<mat-toolbar class="topbar" color="secondary">
   <mat-toolbar-row class="shadow">
     <span>Office Hours</span>
     <span class="topbar-spacer"></span>
     <button mat-button [matMenuTriggerFor]="menu">Options<mat-icon>more_vert</mat-icon></button>
     <mat-menu #menu="matMenu" class="menu">
-      <button mat-menu-item (click)="sayHey()">Say hey</button>
+      <div *ngIf="afAuth.user | async as user; else showLogin">
+        <div mat-menu-item disabled>Hello, {{ user.displayName }}</div>
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </div>
+      <ng-template #showLogin>
+        <button mat-menu-item (click)="login()">Login</button>
+      </ng-template>
     </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>

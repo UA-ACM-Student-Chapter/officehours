@@ -18,6 +18,16 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView
 } from 'angular-calendar';
+import {FormControl} from '@angular/forms';
+import { MatAutocompleteTrigger } from '@angular/material'
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+
+export interface State {
+  flag: string;
+  name: string;
+  population: string;
+}
 
 const colors: any = {
   red: {
@@ -37,13 +47,33 @@ const colors: any = {
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.css']
+  styleUrls: ['./calendar.component.scss']
 })
+
+
 export class CalendarComponent implements OnInit {
 
-  constructor(private modal: NgbModal, private http: HttpClient) {}
+  @ViewChild(MatAutocompleteTrigger) classChooser: MatAutocompleteTrigger;
+
+  stateCtrl = new FormControl();
+  filteredStates: Observable<State[]>;
+
+  constructor(private modal: NgbModal, private http: HttpClient) {
+    this.filteredStates = this.stateCtrl.valueChanges
+      .pipe(
+        startWith(''),
+        map(state => state ? this._filterStates(state) : this.states.slice())
+      );
+  }
+
+  private _filterStates(value: string): State[] {
+    const filterValue = value.toLowerCase();
+
+    return this.states.filter(state => state.name.toLowerCase().indexOf(filterValue) === 0);
+  }
 
   ShowCalendar: boolean = false;
+  showClassChooser: boolean = false;
   SelectedDate: Date;
   ClassName: string = "CS403: Programming Languages";
   ProfessorName: string = "Dr. John Lusth";
@@ -53,6 +83,39 @@ export class CalendarComponent implements OnInit {
     '1:00 pm'
   ]
   SelectedTimeSlot: string;
+
+  pickClass: Function = function(evt) {
+    this.showClassChooser = !this.showClassChooser;
+    evt.stopPropagation();
+    this.classChooser.openPanel();
+  }
+
+  states: State[] = [
+    {
+      name: 'Arkansas',
+      population: '2.978M',
+      // https://commons.wikimedia.org/wiki/File:Flag_of_Arkansas.svg
+      flag: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg'
+    },
+    {
+      name: 'California',
+      population: '39.14M',
+      // https://commons.wikimedia.org/wiki/File:Flag_of_California.svg
+      flag: 'https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg'
+    },
+    {
+      name: 'Florida',
+      population: '20.27M',
+      // https://commons.wikimedia.org/wiki/File:Flag_of_Florida.svg
+      flag: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Florida.svg'
+    },
+    {
+      name: 'Texas',
+      population: '27.47M',
+      // https://commons.wikimedia.org/wiki/File:Flag_of_Texas.svg
+      flag: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Texas.svg'
+    }
+  ];
 
   ngOnInit() {
   }

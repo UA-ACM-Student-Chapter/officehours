@@ -1,12 +1,25 @@
 <div>
   <div>
     <h1>{{ClassName}}</h1>
+    <button *ngIf="!showClassChooser" mat-raised-button color="accent" (click)="pickClass($event)">Change class</button>
+    <form *ngIf="showClassChooser">
+        <mat-form-field>
+          <input #classChooser matInput placeholder="Class" aria-label="Class" [matAutocomplete]="auto" [formControl]="stateCtrl">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
+              <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
+              <span>{{state.name}}</span> |
+              <small>Population: {{state.population}}</small>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
     <h2>{{ProfessorName}}</h2>
   </div>
   <div>
     <p>Reserve a time:</p>
     <mat-form-field>
-      <input 
+      <input color="primary"
         matInput [matDatepicker]="picker" 
         placeholder="Choose a date"
         [(ngModel)]="SelectedDate">

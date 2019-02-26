@@ -5,17 +5,17 @@ import { auth } from 'firebase/app';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 
 export class LoginComponent implements OnInit {
 
   constructor(public afAuth: AngularFireAuth) {
   }
-  login() {
+  public login() {
     this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
   }
-  logout() {
+  public logout() {
     this.afAuth.auth.signOut();
   }
 
