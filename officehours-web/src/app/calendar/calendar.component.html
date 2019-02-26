@@ -1,54 +1,51 @@
 <div>
   <div>
-    <h1>{{ClassName}}</h1>
-    <button *ngIf="!showClassChooser" mat-raised-button color="accent" (click)="pickClass($event)">Change class</button>
-    <form *ngIf="showClassChooser">
-        <mat-form-field>
-          <input #classChooser matInput placeholder="Class" aria-label="Class" [matAutocomplete]="auto" [formControl]="stateCtrl">
-          <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let state of filteredStates | async" [value]="state.name">
-              <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
-              <span>{{state.name}}</span> |
-              <small>Population: {{state.population}}</small>
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-    <h2>{{ProfessorName}}</h2>
+    <h2>Class: {{SelectedClass}}</h2>
+    <div [hidden]="ShowClassChooser">
+      <button mat-raised-button color="accent" (click)="pickClass($event)">Change class</button>
+    </div>
+    <form [formGroup]="classForm" [hidden]="!ShowClassChooser">
+      <mat-form-field>
+        <input #classChooserTrigger formControlName="class" matInput placeholder="Enter class name"
+          aria-label="Enter class name" [matAutocomplete]="auto" [formControl]="classCtrl" [(ngModel)]="tempSelectedClass">
+        <button mat-button *ngIf="tempSelectedClass" matSuffix mat-icon-button aria-label="Clear" (click)="tempSelectedClass=''">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-autocomplete autoActiveFirstOption (optionSelected)="classSelected()" id="classChooser"
+          #auto="matAutocomplete">
+          <mat-option *ngFor="let classItem of filteredClasses | async" [value]="classItem.name">
+            <img aria-hidden [src]="classItem.icon" height="25">
+            <span>{{classItem.name}}</span>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+    <h3>Professor: {{ProfessorName}}</h3>
   </div>
   <div>
     <p>Reserve a time:</p>
     <mat-form-field>
-      <input color="primary"
-        matInput [matDatepicker]="picker" 
-        placeholder="Choose a date"
-        [(ngModel)]="SelectedDate">
+      <input color="primary" matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="SelectedDate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>    
+    </mat-form-field>
   </div>
   <div *ngIf="SelectedDate">
     <mat-form-field>
-        <mat-select placeholder="Select timeslot" [(ngModel)]="SelectedTimeSlot" name="slot">
-            <mat-option *ngFor="let slot of AvailableTimeSlots" [value]="slot">
-              {{slot}}
-            </mat-option>
-          </mat-select>  
+      <mat-select placeholder="Select timeslot" [(ngModel)]="SelectedTimeSlot" name="slot">
+        <mat-option *ngFor="let slot of AvailableTimeSlots" [value]="slot">
+          {{slot}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
   <button mat-button class="reserve-button" *ngIf="SelectedTimeSlot" style="margin-bottom:20px;">Reserve</button>
   <div>
-    <mat-slide-toggle 
-    [(ngModel)]="ShowCalendar"
-    [color]="'primary'"></mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="ShowCalendar" [color]="'primary'"></mat-slide-toggle>
     Show/hide calendar
   </div>
 </div>
-<mwl-calendar-week-view
-    [viewDate]="viewDate"
-    [events]="events"
-    [refresh]="refresh"
-    (eventClicked)="handleEvent('Clicked', $event.event)"
-    (eventTimesChanged)="eventTimesChanged($event)"
-    *ngIf="ShowCalendar">
-  </mwl-calendar-week-view>
+<mwl-calendar-week-view [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+  (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)"
+  *ngIf="ShowCalendar">
+</mwl-calendar-week-view>

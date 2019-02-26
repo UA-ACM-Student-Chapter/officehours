@@ -1,32 +1,18 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  isSameDay,
-  isSameMonth,
-  addHours
-} from 'date-fns';
+import { Component, OnInit, ViewChild, TemplateRef, ElementRef, AfterViewChecked, AfterContentChecked } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours} from 'date-fns';
 import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {
-  CalendarEvent,
-  CalendarEventAction,
-  CalendarEventTimesChangedEvent,
-  CalendarView
-} from 'angular-calendar';
-import {FormControl} from '@angular/forms';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material'
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
-export interface State {
-  flag: string;
+export interface Class {
   name: string;
-  population: string;
+  id: number;
+  icon: string;
 }
 
 const colors: any = {
@@ -51,83 +37,99 @@ const colors: any = {
 })
 
 
-export class CalendarComponent implements OnInit {
-
-  @ViewChild(MatAutocompleteTrigger) classChooser: MatAutocompleteTrigger;
-
-  stateCtrl = new FormControl();
-  filteredStates: Observable<State[]>;
+export class CalendarComponent implements OnInit, AfterContentChecked {
 
   constructor(private modal: NgbModal, private http: HttpClient) {
-    this.filteredStates = this.stateCtrl.valueChanges
+    this.filteredClasses = this.classCtrl.valueChanges
       .pipe(
         startWith(''),
-        map(state => state ? this._filterStates(state) : this.states.slice())
+        map(classItem => classItem ? this._filterClasses(classItem) : this.classes.slice())
       );
   }
 
-  private _filterStates(value: string): State[] {
+  public classCtrl = new FormControl();
+  public filteredClasses: Observable<Class[]>;
+
+  private _filterClasses(value: string): Class[] {
     const filterValue = value.toLowerCase();
 
-    return this.states.filter(state => state.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.classes.filter(classItem => classItem.name.toLowerCase().includes(filterValue));
   }
 
+  SelectedClass: String = "CS 407";
   ShowCalendar: boolean = false;
-  showClassChooser: boolean = false;
+  ShowClassChooser: boolean = false;
+  ShowClassDropdown: boolean = false;
   SelectedDate: Date;
   ClassName: string = "CS403: Programming Languages";
   ProfessorName: string = "Dr. John Lusth";
   AvailableTimeSlots: string[] = [
     '12:00 pm',
-    '12:30 pm', 
+    '12:30 pm',
     '1:00 pm'
   ]
   SelectedTimeSlot: string;
-
-  pickClass: Function = function(evt) {
-    this.showClassChooser = !this.showClassChooser;
-    evt.stopPropagation();
-    this.classChooser.openPanel();
-  }
-
-  states: State[] = [
+  classes: Class[] = [
     {
-      name: 'Arkansas',
-      population: '2.978M',
-      // https://commons.wikimedia.org/wiki/File:Flag_of_Arkansas.svg
-      flag: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Flag_of_Arkansas.svg'
+      name: ' CS 407',
+      id: 0,
+      icon: 'https://cdn4.iconfinder.com/data/icons/scientific-study-1/48/20-Scientific_Study-512.png'
     },
     {
-      name: 'California',
-      population: '39.14M',
-      // https://commons.wikimedia.org/wiki/File:Flag_of_California.svg
-      flag: 'https://upload.wikimedia.org/wikipedia/commons/0/01/Flag_of_California.svg'
+      name: ' GEO 101',
+      id: 1,
+      icon: 'https://cdn3.iconfinder.com/data/icons/education-1/256/Geography-512.png'
     },
     {
-      name: 'Florida',
-      population: '20.27M',
-      // https://commons.wikimedia.org/wiki/File:Flag_of_Florida.svg
-      flag: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Florida.svg'
-    },
-    {
-      name: 'Texas',
-      population: '27.47M',
-      // https://commons.wikimedia.org/wiki/File:Flag_of_Texas.svg
-      flag: 'https://upload.wikimedia.org/wikipedia/commons/f/f7/Flag_of_Texas.svg'
+      name: ' BIO 101',
+      id: 2,
+      icon: 'https://cdn3.iconfinder.com/data/icons/education-209/64/tube-lab-science-school-512.png'
     }
   ];
+  classForm: FormGroup = new FormGroup({
+    class: this.classCtrl
+  });
+
+  tempSelectedClass: String;
+
+  @ViewChild('classChooserTrigger', { read: MatAutocompleteTrigger })
+  public classChooserTrigger: MatAutocompleteTrigger;
+
+  @ViewChild("classChooserTrigger") classField: ElementRef; 
+
+  classSelected: Function = function() {
+    this.SelectedClass = this.classForm.get('class').value;
+    this.ShowClassChooser = false;
+  }
+
+  pickClass: Function = function (evt) {
+    this.ShowClassChooser = !this.ShowClassChooser;
+    this.ShowClassDropdown = true;
+    evt.stopPropagation();
+    this.classChooserTrigger.openPanel();
+  }
+
+  ngAfterViewChecked() {
+    if (this.ShowClassDropdown) {
+      this.classField.nativeElement.focus();
+      this.ShowClassDropdown = false;
+    }
+  }
 
   ngOnInit() {
   }
 
+  ngAfterViewInit() {
+    if (this.ShowClassChooser) {
+    }
+  }
+
+  // Calendar stuff
+
   modalContent: TemplateRef<any>;
-
   view: CalendarView = CalendarView.Month;
-
   CalendarView = CalendarView;
-
   viewDate: Date = new Date();
-
   modalData: {
     action: string;
     event: CalendarEvent;
